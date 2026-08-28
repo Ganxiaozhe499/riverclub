@@ -285,7 +285,13 @@ function renderSeats(game) {
   const layer = $('seatLayer');
   const visiblePlayers = (game.players || []).filter(player => !player.left);
   const me = visiblePlayers.find(player => player.userId === user.id);
-  const players = me ? [me, ...visiblePlayers.filter(player => player.userId !== user.id)].slice(0, 10) : visiblePlayers.slice(0, 10);
+  // The engine advances player indexes clockwise. Rotate the same seat order so
+  // the local player stays at the bottom without changing who acts next.
+  const myIndex = me ? visiblePlayers.findIndex(player => player.userId === user.id) : -1;
+  const orderedPlayers = myIndex >= 0
+    ? visiblePlayers.slice(myIndex).concat(visiblePlayers.slice(0, myIndex))
+    : visiblePlayers;
+  const players = orderedPlayers.slice(0, 10);
   layer.innerHTML = players.map((player, index) => {
     const thinking = game.currentUserId === player.userId && playingStatuses.includes(game.status);
     const winner = (game.winners || []).some(item => item.userId === player.userId);
