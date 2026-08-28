@@ -467,7 +467,7 @@ function renderTableControls(seated, game) {
     addBotBtn.addEventListener('click', addBot);
   }
   addBotBtn.classList.remove('hidden');
-  addBotBtn.disabled = !(currentRoom.ownerId === user.id && currentRoom.realPlayers <= 1 && currentRoom.players < currentRoom.max && ['waiting', 'showdown'].includes(game.status));
+  addBotBtn.disabled = currentRoom.players >= currentRoom.max;
 }
 
 function openBuyin(room) {
