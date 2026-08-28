@@ -172,6 +172,7 @@ async function api(path, options = {}) {
   const body = options.body ? JSON.parse(options.body) : {};
   if (path === '/auth/login') return rpc('auth.login', body);
   if (path === '/auth/register') return rpc('auth.register', body);
+  if (path === '/auth/guest') return rpc('auth.guest');
   if (path === '/me') return rpc('me');
   if (path === '/rooms' && options.method === 'POST') return rpc('rooms.create', body);
   if (path === '/rooms') return rpc('rooms.list');
@@ -559,6 +560,18 @@ async function doAuth(event) {
   } catch (error) { toast(error.message); }
 }
 
+async function guestLogin() {
+  try {
+    const result = await api('/auth/guest', { method: 'POST' });
+    setToken(result.token);
+    user = result.user;
+    show('lobbyView');
+    await loadRooms();
+    updateBalance();
+    toast('已使用游客身份进入，刷新后需要重新进入');
+  } catch (error) { toast(error.message); }
+}
+
 async function loadRooms() {
   const result = await api('/rooms');
   rooms = result.rooms;
@@ -643,6 +656,7 @@ async function addBot() {
 
 async function init() {
   $('authForm').addEventListener('submit', doAuth);
+  $('guestLoginBtn').addEventListener('click', guestLogin);
   $('switchAuth').addEventListener('click', () => setAuthMode(authMode === 'login' ? 'register' : 'login'));
   $('logoutBtn').addEventListener('click', () => logout());
   $('createRoomBtn').addEventListener('click', createRoom);
