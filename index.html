@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101316" />
+  <title>River Club · 德州扑克大厅</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260828-8" />
+  <link rel="stylesheet" href="game.css?v=20260828-9" />
+</head>
+<body>
+  <div id="toast" class="toast" role="status"></div>
+  <div id="app" class="app-shell">
+    <section id="authView" class="auth-layout">
+      <div class="auth-art">
+        <div class="brand-mark"><span class="brand-dot"></span> RIVER CLUB</div>
+        <div class="art-copy">
+          <p class="eyebrow">PRIVATE TABLES · 24/7</p>
+          <h1>Play the hand.<br><em>Own the moment.</em></h1>
+          <p class="art-note">一个安静、专注的线上牌桌。和熟悉的人，认真打好每一手牌。</p>
+        </div>
+        <div class="art-footer"><span>♠</span> Texas Hold'em community <span>·</span> v0.1</div>
+      </div>
+      <div class="auth-panel">
+        <div class="mobile-brand"><span class="brand-dot"></span> RIVER CLUB</div>
+        <div class="auth-header">
+          <p class="eyebrow">WELCOME BACK</p>
+          <h2 id="authTitle">登录大厅</h2>
+          <p id="authSubtitle">登录后继续你的牌局。</p>
+        </div>
+        <form id="authForm" class="auth-form">
+          <label>昵称<input id="usernameInput" autocomplete="username" placeholder="例如：river_ace" required minlength="2" /></label>
+          <label>密码<input id="passwordInput" type="password" autocomplete="current-password" placeholder="至少 6 位" required minlength="6" /></label>
+          <button class="btn btn-primary btn-block" type="submit" id="authSubmit">登录 <span>→</span></button>
+        </form>
+        <button class="switch-auth" id="switchAuth">还没有账号？<strong>创建一个</strong></button>
+        <div class="auth-footnote"><span class="lock-icon">⌁</span> 你的牌桌数据仅保存在本机浏览器</div>
+      </div>
+    </section>
+
+    <section id="lobbyView" class="view hidden">
+      <header class="topbar">
+        <div class="brand-mark"><span class="brand-dot"></span> RIVER CLUB</div>
+        <div class="topbar-right">
+          <div class="balance-chip"><span class="balance-label">积分</span><strong id="pointsBalance">100.00</strong></div>
+          <div class="avatar" id="userAvatar">R</div>
+          <div class="user-menu"><strong id="userName">river_ace</strong><button id="logoutBtn" class="icon-btn" aria-label="退出登录" title="退出登录">↗</button></div>
+        </div>
+      </header>
+      <main class="lobby-main">
+        <div class="lobby-heading">
+          <div><p class="eyebrow">THE LOBBY</p><h1>选择一张牌桌</h1><p class="muted">今天也来打几手好牌。</p></div>
+          <button class="btn btn-primary" id="createRoomBtn"><span class="btn-plus">＋</span> 创建房间</button>
+        </div>
+        <div class="lobby-toolbar">
+          <div class="tabs" role="tablist"><button class="tab active" data-filter="all">全部房间 <span id="allCount">4</span></button><button class="tab" data-filter="mine">我的房间</button></div>
+          <div class="lobby-search"><span>⌕</span><input id="roomSearch" placeholder="搜索房间代码" maxlength="5" /></div>
+        </div>
+        <div id="roomGrid" class="room-grid"></div>
+        <div id="emptyRooms" class="empty-state hidden"><div class="empty-icon">♧</div><h3>还没有这样的房间</h3><p>换个关键词，或者创建一张新牌桌。</p></div>
+        <div class="lobby-info"><div><span class="info-icon">◎</span><strong>积分与筹码</strong><span>1.00 积分 = 100 筹码</span></div><div><span class="info-icon">↻</span><span>每次买入 100–2,000 筹码，桌上最多持有 2,000 筹码</span></div></div>
+      </main>
+    </section>
+
+    <section id="tableView" class="view hidden">
+      <header class="table-topbar"><button class="exit-room" id="backToLobby" aria-label="退出房间">← <span>退出房间</span></button><button class="voice-toggle" id="voiceToggle" aria-pressed="false"><span class="voice-dot"></span><span>开麦</span></button></header>
+      <main class="table-main">
+        <div class="table-stage">
+          <div class="felt-glow"></div>
+          <div class="poker-table" id="pokerTable">
+            <div class="table-logo">RIVER<br><span>CLUB</span></div>
+            <div class="pot-display"><small>POT</small><strong id="potAmount">0</strong></div>
+            <div class="community-cards" id="communityCards"><div class="card-placeholder"></div><div class="card-placeholder"></div><div class="card-placeholder"></div><div class="card-placeholder"></div><div class="card-placeholder"></div></div>
+            <div class="seat-layer" id="seatLayer"></div>
+          </div>
+        </div>
+        <aside class="table-sidebar">
+          <div class="side-panel buyin-panel"><div class="panel-title"><span>桌上资产</span><button class="text-btn" id="buyInBtn">＋ 买入</button></div><div class="asset-row"><span>当前筹码</span><strong><span id="sideStack">0</span> <small>筹码</small></strong></div><div class="asset-row"><span>可用积分</span><strong id="sidePoints">100.00</strong></div><div class="asset-rule"><span>换算比例</span><span>1.00 积分 = 100 筹码</span></div></div>
+          <div class="side-panel room-info-panel"><div class="panel-title"><span>房间信息</span><span class="online-count">● <b id="roomOnline">0</b></span></div><div class="room-info-row"><span>房间代码</span><strong id="roomInfoName">-</strong></div><div class="room-info-row"><span>人数</span><strong id="roomInfoPlayers">0 / 0</strong></div><div class="room-info-row"><span>盲注</span><strong id="roomInfoStakes">1 / 2</strong></div><div class="room-info-row"><span>密码</span><strong id="roomInfoPassword">公开</strong></div></div>
+          <div class="side-panel chat-panel"><div class="panel-title"><span>牌桌消息</span><span class="online-count">● 0 在线</span></div><div class="chat-messages" id="chatMessages"><p><b>系统</b><span>欢迎来到牌桌，祝你好运。</span></p></div><form id="chatForm" class="chat-input"><input id="chatInput" placeholder="说点什么..." maxlength="60" /><button aria-label="发送" title="发送">↑</button></form></div>
+        </aside>
+      </main>
+      <div class="action-bar" id="actionBar"><div class="action-context"><span class="eyebrow">YOUR MOVE</span><strong id="moveLabel">轮到你行动</strong></div><div class="actions"><button class="btn btn-ghost" id="foldBtn">弃牌</button><button class="btn btn-outline" id="checkBtn">过牌</button><button class="btn btn-outline" id="callBtn">跟注</button><button class="btn btn-primary" id="raiseBtn">加注 <span>20</span></button><button class="btn btn-primary allin-btn" id="allinBtn">All-in</button><button class="btn btn-primary hidden" id="nextHandBtn">准备</button><label class="auto-ready"><input type="checkbox" id="autoReady"> 自动准备</label></div></div>
+    </section>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop hidden"><div class="modal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose" aria-label="关闭">×</button><div id="modalContent"></div></div></div>
+  <script src="config.js?v=20260828-11"></script>
+  <script src="app.js?v=20260828-11"></script>
+</body>
+</html>
